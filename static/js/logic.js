@@ -106,7 +106,7 @@ var icons = {
 
 // call the json file
 d3.json(`/api/votos/2018`, function(resultados) {
-
+  console.log(resultados)
 
   // Create an object to keep of the number of states won per presidential party
   // var Votos_partidos = {
