@@ -1,9 +1,14 @@
 from flask import Flask, render_template, jsonify,request
 from flask_sqlalchemy import SQLAlchemy
+import os
 
+PEOPLE_FOLDER = os.path.join('static','pres_photos')
 app = Flask(__name__)
 
 db=SQLAlchemy()
+
+
+app.config['UPLOAD_FOLDER'] = PEOPLE_FOLDER
 
 app.debug = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://cdcbpwkylbzrrr:9a5ce1442c169cfe6c3ad8fc09df281ff9f4e732ea6735b6b49229398850c084@ec2-54-158-122-162.compute-1.amazonaws.com:5432/d19bqudloefpjs'
@@ -41,9 +46,12 @@ class Tvi(db.Model):
     voto = db.Column(db.Integer,name='voto')
     GANADOR = db.Column(db.String(80),name='GANADOR')
 
+
+
 @app.route('/')
-def index():
-    return render_template('index.html')
+def ƒ():
+    full_filename = os.path.join(app.config['UPLOAD_FOLDER'],'2018elections.jpeg')
+    return render_template('index.html', user_image = full_filename)
 @app.route('/api/votos/<ano>')
 def votos(ano):
     resultados = Tvi.query.filter(Tvi.ANO==ano).all()
@@ -67,6 +75,29 @@ def submit():
             return render_template('success.html')
         return render_template('index.html', message=('Se ha registrado su voto'))
 
+@app.route('/about')
+def aboutpage():
+    return render_template('about.html')
+    
+@app.route('/2012elections')
+def twelveelections():
+    full_filename = os.path.join(app.config['UPLOAD_FOLDER'],'2012elections.jpeg')
+    return render_template('2012elections.html', user_image = full_filename)
+
+@app.route('/2006elections')
+def sixelections():
+    full_filename = os.path.join(app.config['UPLOAD_FOLDER'],'2006elections.jpeg')
+    return render_template('2006elections.html', user_image = full_filename)
+
+@app.route('/2000elections')
+def twothousandselections():
+    full_filename = os.path.join(app.config['UPLOAD_FOLDER'],'2000elections.jpeg')
+    return render_template('2000elections.html', user_image = full_filename)
+    
+@app.route('/1994elections')
+def ninetyfourelections():
+    full_filename = os.path.join(app.config['UPLOAD_FOLDER'],'1994elections.png')
+    return render_template('1994elections.html', user_image = full_filename)
 
 if __name__ == '__main__':
     app.debug = True
