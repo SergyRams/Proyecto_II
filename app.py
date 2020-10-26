@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify,request
+from flask import Flask, render_template, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 import os
 
@@ -7,34 +7,11 @@ app = Flask(__name__)
 
 db=SQLAlchemy()
 
-
 app.config['UPLOAD_FOLDER'] = PEOPLE_FOLDER
 
 app.debug = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://cdcbpwkylbzrrr:9a5ce1442c169cfe6c3ad8fc09df281ff9f4e732ea6735b6b49229398850c084@ec2-54-158-122-162.compute-1.amazonaws.com:5432/d19bqudloefpjs'
 db.init_app(app)
-#Host
-#ec2-54-158-122-162.compute-1.amazonaws.com
-#Database
-#d19bqudloefpjs
-#User
-#cdcbpwkylbzrrr
-#Port
-#5432
-#Password
-#9a5ce1442c169cfe6c3ad8fc09df281ff9f4e732ea6735b6b49229398850c084
-#URI
-#postgres://cdcbpwkylbzrrr:9a5ce1442c169cfe6c3ad8fc09df281ff9f4e732ea6735b6b49229398850c084@ec2-54-158-122-162.compute-1.amazonaws.com:5432/d19bqudloefpjs
-#Heroku CLI
-#heroku pg:psql postgresql-vertical-12726 --app dbcmxelections
-
-
-#else:
-#    app.debug = False
-#    app.config['SQLALCHEMY_DATABASE_URI'] = ''
-#app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-#db = SQLAlchemy(app)
-
 
 class Tvi(db.Model):
     __tablename__ = 'total_votos_integrado'
@@ -46,12 +23,11 @@ class Tvi(db.Model):
     voto = db.Column(db.Integer,name='voto')
     GANADOR = db.Column(db.String(80),name='GANADOR')
 
-
-
 @app.route('/')
 def ƒ():
     full_filename = os.path.join(app.config['UPLOAD_FOLDER'],'2018elections.jpeg')
     return render_template('index.html', user_image = full_filename)
+
 @app.route('/api/votos/<ano>')
 def votos(ano):
     resultados = Tvi.query.filter(Tvi.ANO==ano).all()
@@ -65,7 +41,6 @@ def submit():
         ANO = request.form['ANO']
         voto = request.form['voto']
         comentarios = request.form['comentarios']
-        # print(customer, dealer, rating, comments)
         if ESTADO == '' or ANO == '':
             return render_template('index.html', message='Ingrese los campos requeridos')
         if db.session.query(total_votos_integrado).filter(total_votos_integrado.ESTADO == ESTADO).count() == 0:
