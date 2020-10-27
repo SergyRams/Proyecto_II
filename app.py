@@ -45,22 +45,6 @@ def votos(ano):
     # Generate JSON using Flask's jsonify() function
     return jsonify(resultados)
 
-@app.route('/submit', methods=['POST'])
-def submit():
-    if request.method == 'POST':
-        ESTADO = request.form['ESTADO']
-        ANO = request.form['ANO']
-        voto = request.form['voto']
-        comentarios = request.form['comentarios']
-        if ESTADO == '' or ANO == '':
-            return render_template('index.html', message='Ingrese los campos requeridos')
-        if db.session.query(total_votos_integrado).filter(total_votos_integrado.ESTADO == ESTADO).count() == 0:
-            data = total_votos_integrado(ESTADO, ANO, voto, comentarios)
-            db.session.add(data)
-            db.session.commit()
-            return render_template('success.html')
-        return render_template('index.html', message=('Se ha registrado su voto'))
-
 @app.route('/about')
 def aboutpage():
     return render_template('about.html')
